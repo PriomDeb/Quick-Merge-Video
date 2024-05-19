@@ -2,6 +2,7 @@ import math
 from moviepy.editor import VideoFileClip, concatenate_videoclips, vfx, CompositeVideoClip
 import time
 from pymediainfo import MediaInfo
+import sys
 
 class QuickMergeVideo:
     def __init__(self):
@@ -9,6 +10,12 @@ class QuickMergeVideo:
         self.__clips = []
         self.__video_clips = []
         self.__merged = None
+        self.__fadein = 0
+        self.__fadeout = 0
+    
+    def set_properties(self, fadein, fadeout):
+        self.__fadein = fadein
+        self.__fadeout = fadeout
     
     def get_bitrate(self, video_path, kbps=True):
         media_info = MediaInfo.parse(video_path)
@@ -32,7 +39,7 @@ class QuickMergeVideo:
     
     def read_clips(self, message=False, clip_address=False):
         start = time.time()
-        self.__video_clips = [VideoFileClip(i) for i in self.__clips]
+        self.__video_clips = [VideoFileClip(i).fx(vfx.fadein, self.__fadein).fx(vfx.fadeout, self.__fadeout) for i in self.__clips]
         end = time.time()
         
         if message: print(f"\nTotal time taken to read video files: {(end - start):.2f}s.")
@@ -53,22 +60,20 @@ class QuickMergeVideo:
 # clip1 = VideoFileClip("38891-418897479.mp4").subclip(0, 4).fx(vfx.fadein, 1)
 # clip2 = VideoFileClip("204307-923909646.mp4").subclip(0, 4).fx(vfx.fadein, 1)
 
-# start = time.time()
-# combined = concatenate_videoclips([clip1, clip2])
-
-# threads = 2
-
-# combined.write_videofile("merged.mp4", threads=threads)
-# end = time.time()
-
 # log = open("log.txt", "+a")
 # log.write(f"Time: {end - start} Threads: {threads}\n")
 # log.close()
 
-# print(end - start)
-
 quick_video = QuickMergeVideo()
 bitrate = quick_video.get_bitrate("204307-923909646.mp4")
-quick_video.add_clips(clips_array=["204307-923909646.mp4", "38891-418897479.mp4"])
-quick_video.save_video()
+# quick_video.add_clips(clips_array=["204307-923909646.mp4", "38891-418897479.mp4"])
+# quick_video.set_properties(fadein=1, fadeout=1)
+# quick_video.save_video()
+
+if len(sys.argv) > 1:
+    clips = sys.argv[1:]
+    quick_video.add_clips(clips_array=clips)
+    quick_video.set_properties(fadein=1, fadeout=1)
+    quick_video.save_video()
+    
 

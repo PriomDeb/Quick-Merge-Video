@@ -27,8 +27,25 @@ def create_transition_clips(clips, overlap_duration):
     return final_video
 
 # Example usage
-clips = [VideoFileClip("204307-923909646.mp4").subclip(0, 4), VideoFileClip("38891-418897479.mp4").subclip(0, 4)]
-overlap_duration = 2  # seconds
+# clips = [VideoFileClip("204307-923909646.mp4").subclip(0, 4), VideoFileClip("38891-418897479.mp4").subclip(0, 4)]
+# overlap_duration = 2  # seconds
 
-final_clip = create_transition_clips(clips, overlap_duration)
-final_clip.write_videofile("output_video.mp4")
+# final_clip = create_transition_clips(clips, overlap_duration)
+# final_clip.write_videofile("output_video.mp4")
+
+import sys
+
+def main():
+    if len(sys.argv) > 1:
+        # The first argument is always the script name
+        script_name = sys.argv[0]
+        # Arguments start from sys.argv[1]
+        arguments = sys.argv[1:]
+        print(f"Script name: {script_name}")
+        print(f"Arguments: {arguments}")
+    else:
+        print("No arguments provided.")
+
+if __name__ == "__main__":
+    main()
+
