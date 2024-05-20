@@ -4,6 +4,7 @@ import time
 from pymediainfo import MediaInfo
 import sys
 from proglog import ProgressBarLogger
+import argparse
 
 class QuickMergeVideo:
     def __init__(self):
@@ -55,55 +56,60 @@ class QuickMergeVideo:
         
         if message: print(f"\nTotal time taken to read video files: {(end - start):.2f}s.")
         if clip_address: print(f"Video clips memory address: {self.__video_clips}.")
+        
+        return self.__video_clips
     
-    def merge_clips(self):
-        self.__merged = concatenate_videoclips(self.__video_clips)
-    
-    def save_video(self, save=True):
-        if not save: return
-        
-        self.read_clips()
-        self.merge_clips()
-        
-        self.merge_video_audio()
-        
-        print(f"Merged Duration: {self.__merged.duration}")
-        self.__merged = self.__merged.set_audio(self.__audio_clip)
-        
-        start = time.time()
-        logger = CustomProgressBar()
-        self.__merged.write_videofile("Merged.mp4", bitrate=self.__bitrate, logger=logger)
-        end = time.time()
-        print(f"\nTotal time taken to merge videos: {(end - start):.2f}s.")
-        
-        log = open("log.txt", "+a")
-        log.write(f"Time: {end - start} Threads: {self.__threads}\n")
-        log.close()
     
     def get_duration(self):
         self.read_clips()
         duration = [i.duration for i in self.__video_clips]
-        print(duration)
-        print(max(duration))
+        return duration
     
-    def load_audio(self, audio_path):
-        self.__audio_clip = AudioFileClip(audio_path).subclip(0, 10)
-        print(f"Audio Duration: {self.__audio_clip.duration}")
-        self.__audio_duration = self.__audio_clip.duration
-    
-    def merge_video_audio(self):
-        print(sum(i.duration for i in self.__video_clips))
+    def upload_audio(self, audio_path, subclip=False, subclip_start=None, subclip_end=None):
+        self.__audio_clip = AudioFileClip(audio_path)
+        if subclip: self.__audio_clip = AudioFileClip(audio_path).subclip(subclip_start, subclip_end)
         
-        video_duration = sum(i.duration for i in self.__video_clips)
+        self.__audio_duration = self.__audio_clip.duration
+        
+        return self.__audio_clip
+    
+    def read_audio(self):
+        return self.__audio_clip
+    
+    def magic_quick(self, save=True):
+        uploaded_clips = self.read_clips()
+        uploaded_audio = self.read_audio()
+        
+        # Extending video duration based on audio duration
+        video_duration = sum(i.duration for i in uploaded_clips)
         
         while video_duration <= self.__audio_duration:
-            self.__video_clips.extend(self.__video_clips)
+            uploaded_clips.extend(uploaded_clips)
             video_duration += video_duration
         
-        self.__merged = concatenate_videoclips(self.__video_clips).subclip(0, self.__audio_duration)
-    
-    def magic_quick(self):
-        pass
+        merged = concatenate_videoclips(uploaded_clips).subclip(0, self.__audio_duration)
+        
+        # Adding audio
+        merged = merged.set_audio(uploaded_audio)
+        print(merged.duration)
+        
+        if not save:
+            return
+        
+        # Saving the video
+        start = time.time()
+        logger = CustomProgressBar()
+        
+        merged.write_videofile("Merged.mp4", 
+                               bitrate=self.__bitrate)
+        
+        end = time.time()
+        print(f"\nTotal time taken to merge videos: {(end - start):.2f}s.")
+        
+        # Saving the log
+        log = open("log.txt", "+a")
+        log.write(f"Time: {end - start} Threads: {self.__threads}\n")
+        log.close()
         
         
         
@@ -117,15 +123,54 @@ class CustomProgressBar(ProgressBarLogger):
 
 if __name__ == "__main__":
     quick_video = QuickMergeVideo()
-    bitrate = quick_video.get_bitrate("204307-923909646.mp4")
-    print(bitrate)
     
     if len(sys.argv) > 1:
         clips = sys.argv[1:]
         quick_video.add_clips(clips_array=clips)
-        quick_video.set_properties(fadein=0, fadeout=0, subclip=True, subclip_start=0, subclip_end=2)
-        quick_video.get_duration()
-        quick_video.load_audio("Rain 1.wav")
-        quick_video.save_video(save=True)
+        quick_video.set_properties(fadein=1, fadeout=1, subclip=False, subclip_start=0, subclip_end=5)
+        quick_video.upload_audio("Rain 1.wav", subclip=True, subclip_start=0, subclip_end=10)
+        quick_video.magic_quick(save=True)
+    
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument("file_name", type=str, help="")
+    
+    # Initialize the parser
+    parser = argparse.ArgumentParser(description="Process and upload a video with QuickVideo")
+    
+    # Add arguments for add_clips
+    parser.add_argument('--clips', nargs='+', required=True, help='List of clips to add')
+    
+    # Add arguments for set_properties
+    parser.add_argument('--fadein', type=int, default=1, help='Fade-in duration')
+    parser.add_argument('--fadeout', type=int, default=1, help='Fade-out duration')
+    parser.add_argument('--subclip', action='store_true', help='Enable subclipping')
+    parser.add_argument('--subclip_start', type=int, default=0, help='Start time for subclip')
+    parser.add_argument('--subclip_end', type=int, default=5, help='End time for subclip')
+    
+    # Add arguments for upload_audio
+    parser.add_argument('--audio_file', type=str, required=True, help='Audio file to upload')
+    parser.add_argument('--audio_subclip', action='store_true', help='Enable audio subclipping')
+    parser.add_argument('--audio_subclip_start', type=int, default=0, help='Start time for audio subclip')
+    parser.add_argument('--audio_subclip_end', type=int, default=10, help='End time for audio subclip')
+    
+    # Add argument for magic_quick
+    parser.add_argument('--save', action='store_true', help='Save the quick video')
+    
+    # Parse the arguments
+    args = parser.parse_args()
+    
+    # Print the parsed arguments (for demonstration purposes)
+    print(f"Clips: {args.clips}")
+    print(f"Fade-in: {args.fadein}")
+    print(f"Fade-out: {args.fadeout}")
+    print(f"Subclip: {args.subclip}")
+    print(f"Subclip Start: {args.subclip_start}")
+    print(f"Subclip End: {args.subclip_end}")
+    print(f"Audio File: {args.audio_file}")
+    print(f"Audio Subclip: {args.audio_subclip}")
+    print(f"Audio Subclip Start: {args.audio_subclip_start}")
+    print(f"Audio Subclip End: {args.audio_subclip_end}")
+    print(f"Save: {args.save}")
     
 
