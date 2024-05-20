@@ -1,5 +1,5 @@
 import math
-from moviepy.editor import VideoFileClip, concatenate_videoclips, vfx, CompositeVideoClip
+from moviepy.editor import VideoFileClip, concatenate_videoclips, vfx, CompositeVideoClip, AudioFileClip
 import time
 from pymediainfo import MediaInfo
 import sys
@@ -13,6 +13,7 @@ class QuickMergeVideo:
         self.__merged = None
         self.__fadein = 0
         self.__fadeout = 0
+        self.__audio_clip = None
     
     def set_properties(self, fadein, fadeout, bitrate_k=2, threads=5, subclip=False, subclip_start=None, subclip_end=None):
         self.__fadein = fadein
@@ -64,6 +65,11 @@ class QuickMergeVideo:
         self.read_clips()
         self.merge_clips()
         
+        self.merge_video_audio()
+        
+        print(f"Merged Duration: {self.__merged.duration}")
+        self.__merged = self.__merged.set_audio(self.__audio_clip)
+        
         start = time.time()
         logger = CustomProgressBar()
         self.__merged.write_videofile("Merged.mp4", bitrate=self.__bitrate, logger=logger)
@@ -74,21 +80,35 @@ class QuickMergeVideo:
         log.write(f"Time: {end - start} Threads: {self.__threads}\n")
         log.close()
     
-    def progress_callback(self, current, total):
-        percentage = (current / total) * 100
-        print(f"Progress: {percentage:.2f}% completed", end='\r')
-    
     def get_duration(self):
         self.read_clips()
         duration = [i.duration for i in self.__video_clips]
         print(duration)
         print(max(duration))
+    
+    def load_audio(self, audio_path):
+        self.__audio_clip = AudioFileClip(audio_path).subclip(0, 10)
+        print(f"Audio Duration: {self.__audio_clip.duration}")
+        self.__audio_duration = self.__audio_clip.duration
+    
+    def merge_video_audio(self):
+        print(sum(i.duration for i in self.__video_clips))
+        
+        video_duration = sum(i.duration for i in self.__video_clips)
+        
+        while video_duration <= self.__audio_duration:
+            self.__video_clips.extend(self.__video_clips)
+            video_duration += video_duration
+        
+        self.__merged = concatenate_videoclips(self.__video_clips).subclip(0, self.__audio_duration)
+    
+    def magic_quick(self):
+        pass
+        
+        
+        
 
 class CustomProgressBar(ProgressBarLogger):
-    # def callback(self, **changes):
-    #     for (parameter, value) in changes.items():
-    #         print(f"Parameter {parameter} is now {value}")
-    
     def bars_callback(self, bar, attr, value, old_value=None):
         percentage = (value / self.bars[bar]['total']) * 100
         print(f"\rSaving video: {percentage:.2f}", end="\r")
@@ -103,8 +123,9 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         clips = sys.argv[1:]
         quick_video.add_clips(clips_array=clips)
-        quick_video.set_properties(fadein=1, fadeout=1, subclip=False, subclip_start=0, subclip_end=5)
+        quick_video.set_properties(fadein=0, fadeout=0, subclip=True, subclip_start=0, subclip_end=2)
         quick_video.get_duration()
-        quick_video.save_video(save=False)
+        quick_video.load_audio("Rain 1.wav")
+        quick_video.save_video(save=True)
     
 
