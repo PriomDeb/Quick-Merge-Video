@@ -124,16 +124,13 @@ class CustomProgressBar(ProgressBarLogger):
 if __name__ == "__main__":
     quick_video = QuickMergeVideo()
     
-    if len(sys.argv) > 1:
-        clips = sys.argv[1:]
-        quick_video.add_clips(clips_array=clips)
-        quick_video.set_properties(fadein=1, fadeout=1, subclip=False, subclip_start=0, subclip_end=5)
-        quick_video.upload_audio("Rain 1.wav", subclip=True, subclip_start=0, subclip_end=10)
-        quick_video.magic_quick(save=True)
+    # if len(sys.argv) > 1:
+    #     clips = sys.argv[1:]
+    #     quick_video.add_clips(clips_array=clips)
+    #     quick_video.set_properties(fadein=1, fadeout=1, subclip=False, subclip_start=0, subclip_end=5)
+    #     quick_video.upload_audio("Rain 1.wav", subclip=True, subclip_start=0, subclip_end=10)
+    #     quick_video.magic_quick(save=False)
     
-    parser = argparse.ArgumentParser()
-    
-    parser.add_argument("file_name", type=str, help="")
     
     # Initialize the parser
     parser = argparse.ArgumentParser(description="Process and upload a video with QuickVideo")
@@ -142,8 +139,8 @@ if __name__ == "__main__":
     parser.add_argument('--clips', nargs='+', required=True, help='List of clips to add')
     
     # Add arguments for set_properties
-    parser.add_argument('--fadein', type=int, default=1, help='Fade-in duration')
-    parser.add_argument('--fadeout', type=int, default=1, help='Fade-out duration')
+    parser.add_argument('--fadein', type=int, default=0, help='Fade-in duration')
+    parser.add_argument('--fadeout', type=int, default=0, help='Fade-out duration')
     parser.add_argument('--subclip', action='store_true', help='Enable subclipping')
     parser.add_argument('--subclip_start', type=int, default=0, help='Start time for subclip')
     parser.add_argument('--subclip_end', type=int, default=5, help='End time for subclip')
