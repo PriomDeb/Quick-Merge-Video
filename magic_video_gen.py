@@ -8,7 +8,7 @@ import argparse
 import os
 from moviepy.editor import *
 
-parser = argparse.ArgumentParser(description="Convert .mp3 files to .wav files instantly.")
+parser = argparse.ArgumentParser(description="Generate music videos using images and audio.")
 
 parser.add_argument('--rename_images', type=bool, default=False, help='Rename all images in a directory.')
 parser.add_argument('--rename_images_dir', type=str, default="./", help='Directory of images.')
