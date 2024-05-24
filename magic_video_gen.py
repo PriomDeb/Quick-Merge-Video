@@ -8,6 +8,7 @@ import argparse
 import os
 from moviepy.editor import *
 import moviepy
+import ast
 
 parser = argparse.ArgumentParser(description="Generate music videos using images and audio.")
 
@@ -18,6 +19,9 @@ parser.add_argument('--rename_images_name', type=str, help='Add a name to all im
 parser.add_argument('--audio_dir', type=str, default="./", help='Directory of audio.')
 parser.add_argument('--images_dir', type=str, default="./", help='Directory of images for making videos.')
 parser.add_argument('--render_dir', type=str, default="./", help='Directory to save videos.')
+
+parser.add_argument('--audio_list', type=str, help='List of audio.')
+parser.add_argument('--image_list', type=str, help='List of images for making videos.')
 
 
 args = parser.parse_args()
@@ -47,7 +51,7 @@ def text_position(video_x, video_y, text_x, text_y):
     
     return x, y
 
-def magic_music_video_gen(image_path, audio_path, video_text, video_filename, fadein=5, fadeout=8, render_directory="./"):
+def magic_music_video_gen(image_path, audio_path, video_text, video_filename, fadein=1, fadeout=8, absolute_render_directory=None):
     image = ImageClip(image_path)
     audio = AudioFileClip(audio_path)
     audio = moviepy.audio.fx.all.audio_fadein(audio, fadein)
@@ -95,17 +99,39 @@ def magic_music_video_gen(image_path, audio_path, video_text, video_filename, fa
     
     credit_text = TextClip("Image Courtesy: Copilot Designer", font="Lofi", fontsize=10, color="white").set_position((10, 1000)).set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
     
-    
-    final_video = CompositeVideoClip([final_video, video_text_shadow, text, text_artist_shadow, text_artist, credit_text])
+    final_video = CompositeVideoClip([final_video, video_text_shadow, text, text_artist_shadow, text_artist, credit_text]).subclip(0, 5)
     
     start = time.time()
-    final_video.write_videofile(f"{render_directory}/{video_filename}.mp4", fps=30)
+    if absolute_render_directory:
+        render_directory = absolute_render_directory
+    else:
+        render_directory = "./"
+    print("--------------------")
+    print(render_directory)
+    print(f"{video_filename}.mp4")
+    print("--------------------")
+    final_video.write_videofile(f"{video_filename}.mp4", fps=30)
     end = time.time()
     print(f"\nTotal time taken to render the video: {(end - start):.2f}s.")
 
-def magic_video_render(image_dir, audio_dir, render_directory):
-    image_list = [f for f in os.listdir(image_dir) if f.lower().endswith('.jpg')]
-    audio_list = [f for f in os.listdir(audio_dir) if f.lower().endswith('.wav')]
+def magic_video_render(image_dir=None, audio_dir=None, image_list=None, audio_list=None, render_directory=None):
+    if image_dir and audio_dir:
+        image_list = [f for f in os.listdir(image_dir) if f.lower().endswith('.jpg')]
+        audio_list = [f for f in os.listdir(audio_dir) if f.lower().endswith('.wav')]
+    
+    if image_list and audio_list:
+        image_list = image_list
+        audio_list = audio_list
+    
+    if image_list and audio_list:
+        for i, filename in enumerate(audio_list):
+            magic_music_video_gen(image_path=f"{image_list[i]}",
+                                  audio_path=f"{audio_list[i]}",
+                                  video_text=f"Ultimate Lofi Pack Vol 01 \nLofi #{i + 1}",
+                                  video_filename=f"{audio_list[i][:-8]}",
+                                  absolute_render_directory=render_directory
+                                  )
+        return
     
     for i, filename in enumerate(audio_list):
         magic_music_video_gen(image_path=f"{image_dir}/{image_list[i]}",
@@ -123,6 +149,12 @@ if __name__ == "__main__":
         else:
             rename_image_files(directory=args.rename_images_dir)
     
-    image_dir, audio_dir, render_dir = args.images_dir, args.audio_dir, args.render_dir
+    image_dir, image_list,  audio_dir, audio_list, render_dir = args.images_dir, args.image_list, args.audio_dir, args.audio_list, args.render_dir
     
-    magic_video_render(image_dir=image_dir, audio_dir=audio_dir, render_directory=render_dir)
+    if args.image_list: actual_image_list = ast.literal_eval(args.image_list)
+    if args.audio_list: actual_audio_list = ast.literal_eval(args.audio_list)
+    
+    # print(f"Magic Video Gen \nAudio Files: {actual_audio_list} \nImage Files: {actual_image_list} \nRender Directory: {args.render_dir}")
+    
+    # magic_video_render(image_dir=image_dir, audio_dir=audio_dir, render_directory=render_dir)
+    magic_video_render(image_list=actual_image_list, audio_list=actual_audio_list, render_directory=render_dir)
