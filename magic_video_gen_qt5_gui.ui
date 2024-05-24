@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>904</width>
-    <height>709</height>
+    <width>900</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="font">
@@ -193,6 +193,19 @@
    </property>
    <property name="text">
     <string>Render</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cancel_render">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>640</y>
+     <width>171</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancel Render</string>
    </property>
   </widget>
  </widget>

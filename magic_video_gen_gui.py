@@ -13,6 +13,7 @@ class MainWindow(QDialog):
         self.image_browse.clicked.connect(lambda: self.browse_files(image=True, files_read=True))
         self.render_browse.clicked.connect(lambda: self.get_render_directory())
         self.render.clicked.connect(lambda: self.render_videos())
+        self.cancel_render.clicked.connect(lambda: self.closeEvent())
         
         self.__audio_files = None
         self.__image_files = None
@@ -62,7 +63,7 @@ class MainWindow(QDialog):
     
     def get_render_directory(self):
         dialog = QFileDialog()
-        folder_path = dialog.getExistingDirectory(self, "Select Render Folder")
+        folder_path = dialog.getExistingDirectory(self, "Select Render Folder", "./")
         self.__render_directory = folder_path
         self.render_dir.setText(folder_path)
     
@@ -72,9 +73,8 @@ class MainWindow(QDialog):
     def render_videos(self):
         self.executor.submit(self.run_script)
     
-    def closeEvent(self, event):
-        self.executor.shutdown(wait=False)
-        event.accept()
+    def closeEvent(self):
+        self.executor.shutdown(wait=False, cancel_futures=True)
         
 
 app = QApplication(sys.argv)
