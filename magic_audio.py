@@ -57,7 +57,7 @@ def convert_mp3_to_wav(input_file, output_file, bit_depth, fade=False, fade_in="
 def convert_to_wav():
     for i in mp3_files:
         print(f"Converting {i} to .wav file.")
-        convert_mp3_to_wav(input_file=i, 
+        convert_mp3_to_wav(input_file=os.path.join(args.source_directory, i), 
                            output_file=f"{os.path.join(directory_path, 'WAV_OUTPUT')}/{i[:-4]}_WAV.wav", 
                            bit_depth=bit_depth, 
                            fade=args.fade,
