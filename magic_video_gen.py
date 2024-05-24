@@ -7,6 +7,7 @@ from proglog import ProgressBarLogger
 import argparse
 import os
 from moviepy.editor import *
+import moviepy
 
 parser = argparse.ArgumentParser(description="Generate music videos using images and audio.")
 
@@ -40,9 +41,17 @@ def rename_image_files(directory, rename=None):
         os.rename(old_path, new_path)
         print(f"Renamed: {old_path} to {new_path}")
 
+def text_position(video_x, video_y, text_x, text_y):
+    x = (video_x - text_x) / 2
+    y = (video_y - text_y) / 2
+    
+    return x, y
+
 def magic_music_video_gen(image_path, audio_path, video_text, video_filename, fadein=5, fadeout=8, render_directory="./"):
     image = ImageClip(image_path)
     audio = AudioFileClip(audio_path)
+    audio = moviepy.audio.fx.all.audio_fadein(audio, fadein)
+    audio = moviepy.audio.fx.all.audio_fadeout(audio, fadeout)
     
     images = [image.set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)]
     
@@ -50,13 +59,44 @@ def magic_music_video_gen(image_path, audio_path, video_text, video_filename, fa
     final_video.audio = audio
     
     text_font_size = 66
-    text_x, text_y = image.size
-    text_position_x, text_position_y = text_x / 4 - text_font_size, text_y / 8
+    video_x, video_y = image.size
     
     text = TextClip(video_text, 
                     fontsize=text_font_size, color="white", 
-                    font='Lofi').set_position((text_position_x, text_position_y), relative=False).set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
-    final_video = CompositeVideoClip([final_video, text])
+                    font='Lofi').set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
+    text_artist = TextClip("Priom Deb", 
+                    fontsize=text_font_size, color="white", 
+                    font='Lofi').set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
+    
+    video_text_width, video_text_height = text.size
+    video_text_x, video_text_y = text_position(video_x, video_y, video_text_width, video_text_height)
+    text = text.set_position((video_text_x, video_text_y - 300))
+    
+    shadow_offset = 3
+    opacity = 0.5
+    
+    
+    video_text_shadow = TextClip(video_text, 
+                                 fontsize=text_font_size, color="black", 
+                                 font='Lofi').set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
+    video_text_shadow = video_text_shadow.set_position((video_text_x + shadow_offset, video_text_y - 300 + shadow_offset))
+    video_text_shadow = video_text_shadow.set_opacity(opacity)
+    
+    
+    text_artist_width, text_artist_height = text_artist.size
+    text_artist_x, text_artist_y = text_position(video_x, video_y, text_artist_width, text_artist_height)
+    text_artist = text_artist.set_position((text_artist_x, text_artist_y + 400))
+    
+    text_artist_shadow = TextClip("Priom Deb", 
+                                 fontsize=text_font_size, color="black", 
+                                 font='Lofi').set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
+    text_artist_shadow = text_artist_shadow.set_position((text_artist_x + shadow_offset, text_artist_y + 400 + shadow_offset))
+    text_artist_shadow = text_artist_shadow.set_opacity(opacity)
+    
+    credit_text = TextClip("Image Courtesy: Copilot Designer", font="Lofi", fontsize=10, color="white").set_position((10, 1000)).set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
+    
+    
+    final_video = CompositeVideoClip([final_video, video_text_shadow, text, text_artist_shadow, text_artist, credit_text])
     
     start = time.time()
     final_video.write_videofile(f"{render_directory}/{video_filename}.mp4", fps=30)
