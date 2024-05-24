@@ -56,7 +56,7 @@ def magic_music_video_gen(image_path, audio_path, video_text, video_filename, fa
     text = TextClip(video_text, 
                     fontsize=text_font_size, color="white", 
                     font='Lofi').set_position((text_position_x, text_position_y), relative=False).set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
-    final_video = CompositeVideoClip([final_video, text]).subclip(0, 10)
+    final_video = CompositeVideoClip([final_video, text])
     
     start = time.time()
     final_video.write_videofile(f"{render_directory}/{video_filename}.mp4", fps=30)
