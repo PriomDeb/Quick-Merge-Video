@@ -14,7 +14,7 @@ class MainWindow(QDialog):
         self.image_browse.clicked.connect(lambda: self.browse_files(image=True, files_read=True))
         self.render_browse.clicked.connect(lambda: self.get_render_directory())
         self.render.clicked.connect(lambda: self.render_videos())
-        self.cancel_render.clicked.connect(lambda: self.closeEvent())
+        self.cancel_render.clicked.connect(lambda: self.run_script(stop=True))
         
         self.__audio_files = None
         self.__image_files = None
@@ -68,8 +68,10 @@ class MainWindow(QDialog):
         self.__render_directory = folder_path
         self.render_dir.setText(folder_path)
     
-    def run_script(self):
+    def run_script(self, stop=False):
         # os.system(f'python magic_video_gen.py --audio_list "{self.__audio_files}" --image_list "{self.__image_files}" --render_dir "{self.__render_directory}"')
+        if stop:
+            raise "Error"
         magic_video_render(audio_list=self.__audio_files, 
                            image_list=self.__image_files, 
                            render_directory=self.__render_directory)
