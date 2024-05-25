@@ -15,8 +15,10 @@ class MainWindow(QDialog):
         self.render_browse.clicked.connect(lambda: self.get_render_directory())
         self.render.clicked.connect(lambda: self.render_videos())
         self.cancel_render.clicked.connect(lambda: self.run_script(stop=True))
-        self.button.clicked.connect(self.button_clicked)
+        # self.button.clicked.connect(self.button_clicked)
         self.track_number.setMaximum(1000)
+        # self.warning.setVisible(False)
+        # self.button.setVisible(False)
         
         self.__audio_files = None
         self.__image_files = None
