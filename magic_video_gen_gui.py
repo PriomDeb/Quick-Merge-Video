@@ -15,12 +15,23 @@ class MainWindow(QDialog):
         self.render_browse.clicked.connect(lambda: self.get_render_directory())
         self.render.clicked.connect(lambda: self.render_videos())
         self.cancel_render.clicked.connect(lambda: self.run_script(stop=True))
+        self.button.clicked.connect(self.button_clicked)
+        self.track_number.setMaximum(1000)
         
         self.__audio_files = None
         self.__image_files = None
         self.__render_directory = None
         
         self.executor = ThreadPoolExecutor(max_workers=1)
+    
+    def button_clicked(self):
+        album = self.album.text()
+        track = self.track.text()
+        artist = self.artist.text()
+        credit = self.credit.text()
+        track_number = self.track_number.text()
+        
+        print(f"Album: {album} \nTrack: {track} \nArtist: {artist} \nCredit: {credit} \nTrack Number: {track_number}")
         
     def browse_files(self, audio=False, image=False, files_read=True, directory_read=False):
         title = None
@@ -72,9 +83,23 @@ class MainWindow(QDialog):
         # os.system(f'python magic_video_gen.py --audio_list "{self.__audio_files}" --image_list "{self.__image_files}" --render_dir "{self.__render_directory}"')
         if stop:
             raise "Error"
+        
+        album = self.album.text()
+        track = self.track.text()
+        artist = self.artist.text()
+        credit = self.credit.text()
+        track_number = self.track_number.text()
+        print(f"Album: {album} \nTrack: {track} \nArtist: {artist} \nCredit: {credit} \nTrack Number: {track_number}")
+        
         magic_video_render(audio_list=self.__audio_files, 
                            image_list=self.__image_files, 
-                           render_directory=self.__render_directory)
+                           render_directory=self.__render_directory,
+                           video_album_title=album,
+                           video_track_title=track,
+                           artist_name=artist,
+                           track_number_start=track_number,
+                           credit_text=credit
+                           )
     
     def render_videos(self):
         self.executor.submit(self.run_script)
@@ -88,7 +113,8 @@ mainwindow = MainWindow()
 widget = QtWidgets.QStackedWidget()
 widget.addWidget(mainwindow)
 widget.setFixedWidth(920)
-widget.setFixedHeight(700)
+widget.setFixedHeight(800)
+# widget.resize(920, 800)
 widget.show()
 sys.exit(app.exec_())
 

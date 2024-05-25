@@ -51,7 +51,16 @@ def text_position(video_x, video_y, text_x, text_y):
     
     return x, y
 
-def magic_music_video_gen(image_path, audio_path, video_text, video_filename, fadein=1, fadeout=8, absolute_render_directory=None):
+def magic_music_video_gen(image_path, 
+                          audio_path, 
+                          video_text,
+                          artist_text, 
+                          video_filename,
+                          credit, 
+                          fadein=1, 
+                          fadeout=8, 
+                          absolute_render_directory=None,
+                          ):
     image = ImageClip(image_path)
     audio = AudioFileClip(audio_path)
     audio = moviepy.audio.fx.all.audio_fadein(audio, fadein)
@@ -68,7 +77,7 @@ def magic_music_video_gen(image_path, audio_path, video_text, video_filename, fa
     text = TextClip(video_text, 
                     fontsize=text_font_size, color="white", 
                     font='Lofi').set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
-    text_artist = TextClip("Priom Deb", 
+    text_artist = TextClip(artist_text, 
                     fontsize=text_font_size, color="white", 
                     font='Lofi').set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
     
@@ -91,13 +100,13 @@ def magic_music_video_gen(image_path, audio_path, video_text, video_filename, fa
     text_artist_x, text_artist_y = text_position(video_x, video_y, text_artist_width, text_artist_height)
     text_artist = text_artist.set_position((text_artist_x, text_artist_y + 400))
     
-    text_artist_shadow = TextClip("Priom Deb", 
+    text_artist_shadow = TextClip(artist_text, 
                                  fontsize=text_font_size, color="black", 
                                  font='Lofi').set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
     text_artist_shadow = text_artist_shadow.set_position((text_artist_x + shadow_offset, text_artist_y + 400 + shadow_offset))
     text_artist_shadow = text_artist_shadow.set_opacity(opacity)
     
-    credit_text = TextClip("Image Courtesy: Copilot Designer", font="Lofi", fontsize=10, color="white").set_position((10, 1000)).set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
+    credit_text = TextClip(credit, font="Lofi", fontsize=10, color="white").set_position((10, 1000)).set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)
     
     final_video = CompositeVideoClip([final_video, video_text_shadow, text, text_artist_shadow, text_artist, credit_text]).subclip(0, 5)
     
@@ -114,7 +123,17 @@ def magic_music_video_gen(image_path, audio_path, video_text, video_filename, fa
     end = time.time()
     print(f"\nTotal time taken to render the video: {(end - start):.2f}s.")
 
-def magic_video_render(image_dir=None, audio_dir=None, image_list=None, audio_list=None, render_directory=None):
+def magic_video_render(image_dir=None, 
+                       audio_dir=None, 
+                       image_list=None, 
+                       audio_list=None, 
+                       render_directory=None,
+                       video_album_title=None,
+                       video_track_title=None,
+                       artist_name=None,
+                       track_number_start=None,
+                       credit_text=None
+                       ):
     if image_dir and audio_dir:
         image_list = [f for f in os.listdir(image_dir) if f.lower().endswith('.jpg')]
         audio_list = [f for f in os.listdir(audio_dir) if f.lower().endswith('.wav')]
@@ -127,7 +146,9 @@ def magic_video_render(image_dir=None, audio_dir=None, image_list=None, audio_li
         for i, filename in enumerate(audio_list):
             magic_music_video_gen(image_path=f"{image_list[i]}",
                                   audio_path=f"{audio_list[i]}",
-                                  video_text=f"Ultimate Lofi Pack Vol 01 \nLofi #{i + 1}",
+                                  video_text=f"{video_album_title} \n{video_track_title} #{i + int(track_number_start)}",
+                                  artist_text=artist_name,
+                                  credit=credit_text,
                                   video_filename=f"{audio_list[i][:-8]}",
                                   absolute_render_directory=render_directory
                                   )
