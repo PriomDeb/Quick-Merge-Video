@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog
 from PyQt5.uic import loadUi
 import os
 from concurrent.futures import ThreadPoolExecutor
+from magic_video_gen import magic_video_render
 
 class MainWindow(QDialog):
     def __init__(self):
@@ -68,7 +69,10 @@ class MainWindow(QDialog):
         self.render_dir.setText(folder_path)
     
     def run_script(self):
-        os.system(f'python magic_video_gen.py --audio_list "{self.__audio_files}" --image_list "{self.__image_files}" --render_dir "{self.__render_directory}"')
+        # os.system(f'python magic_video_gen.py --audio_list "{self.__audio_files}" --image_list "{self.__image_files}" --render_dir "{self.__render_directory}"')
+        magic_video_render(audio_list=self.__audio_files, 
+                           image_list=self.__image_files, 
+                           render_directory=self.__render_directory)
     
     def render_videos(self):
         self.executor.submit(self.run_script)

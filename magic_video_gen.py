@@ -157,4 +157,4 @@ if __name__ == "__main__":
     # print(f"Magic Video Gen \nAudio Files: {actual_audio_list} \nImage Files: {actual_image_list} \nRender Directory: {args.render_dir}")
     
     # magic_video_render(image_dir=image_dir, audio_dir=audio_dir, render_directory=render_dir)
-    magic_video_render(image_list=actual_image_list, audio_list=actual_audio_list, render_directory=render_dir)
+    # magic_video_render(image_list=actual_image_list, audio_list=actual_audio_list, render_directory=render_dir)
