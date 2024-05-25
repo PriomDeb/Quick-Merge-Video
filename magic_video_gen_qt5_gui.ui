@@ -41,12 +41,16 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QPushButton#audio_browse {
+    <string notr="true">QPushButton {
     background-color: #53df80;
     border-width: 0px;
     border-radius: 10px;
     font: 20px;
     padding: 0px;
+}
+
+QPushButton::hover {
+    background-color: #ddf9ec;
 }</string>
    </property>
    <property name="text">
@@ -121,12 +125,16 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QPushButton#image_browse {
+    <string notr="true">QPushButton {
     background-color: #53df80;
     border-width: 0px;
     border-radius: 10px;
     font: 20px;
     padding: 0px;
+}
+
+QPushButton::hover {
+    background-color: #ddf9ec;
 }</string>
    </property>
    <property name="text">
@@ -154,10 +162,15 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">QTextEdit#audio_dir {
+    <string notr="true">QTextEdit {
     background-color: #093421;
 	border-radius: 10px;
 	color: #a9efd0;
+	padding: 10px;
+}
+
+QTextEdit::hover {
+    background-color: #0d452c;
 }</string>
    </property>
    <property name="textInteractionFlags">
@@ -182,10 +195,15 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">QTextEdit#image_dir {
+    <string notr="true">QTextEdit {
     background-color: #093421;
 	border-radius: 10px;
 	color: #a9efd0;
+	padding: 10px;
+}
+
+QTextEdit::hover {
+    background-color: #0d452c;
 }</string>
    </property>
    <property name="acceptRichText">
@@ -213,10 +231,15 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">QTextEdit#render_dir {
+    <string notr="true">QTextEdit {
     background-color: #093421;
 	border-radius: 10px;
 	color: #a9efd0;
+	padding: 4px;
+}
+
+QTextEdit::hover {
+    background-color: #0d452c;
 }</string>
    </property>
    <property name="textInteractionFlags">
@@ -233,12 +256,16 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QPushButton#render_browse {
+    <string notr="true">QPushButton {
     background-color: #53df80;
     border-width: 0px;
     border-radius: 10px;
     font: 20px;
     padding: 0px;
+}
+
+QPushButton::hover {
+    background-color: #ddf9ec;
 }</string>
    </property>
    <property name="text">
@@ -287,12 +314,16 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QPushButton#render {
+    <string notr="true">QPushButton {
     background-color: #53af80;
     border-width: 0px;
     border-radius: 10px;
     font: 20px;
     padding: 0px;
+}
+
+QPushButton::hover {
+    background-color: #dcaa04;
 }</string>
    </property>
    <property name="text">
@@ -309,12 +340,16 @@
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">QPushButton#cancel_render{
+    <string notr="true">QPushButton{
     background-color: #a9efd0;
     border-width: 0px;
     border-radius: 10px;
     font: 20px;
     padding: 0px;
+}
+
+QPushButton::hover {
+    background-color: red;
 }</string>
    </property>
    <property name="text">
@@ -343,6 +378,11 @@
     background-color: #093421;
 	border-radius: 8px;
 	color: #a9efd0;
+	padding: 10px;
+}
+
+QLineEdit::hover {
+    background-color: #0d452c;
 }</string>
    </property>
   </widget>
@@ -364,10 +404,15 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">QSpinBox#track_number {
+    <string notr="true">QSpinBox {
     background-color: #093421;
 	border-radius: 10px;
 	color: #a9efd0;
+	padding: 10px;
+}
+
+QSpinBox::hover {
+    background-color: #0d452c;
 }</string>
    </property>
   </widget>
@@ -393,6 +438,11 @@
     background-color: #093421;
 	border-radius: 8px;
 	color: #a9efd0;
+	padding: 10px;
+}
+
+QLineEdit::hover {
+    background-color: #0d452c;
 }</string>
    </property>
   </widget>
@@ -414,10 +464,15 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">QLineEdit#credit {
+    <string notr="true">QLineEdit{
     background-color: #093421;
 	border-radius: 8px;
 	color: #a9efd0;
+	padding: 10px;
+}
+
+QLineEdit::hover {
+    background-color: #0d452c;
 }</string>
    </property>
   </widget>
@@ -555,10 +610,15 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">QLineEdit {
+    <string notr="true">QLineEdit{
     background-color: #093421;
 	border-radius: 8px;
 	color: #a9efd0;
+	padding: 10px;
+}
+
+QLineEdit::hover {
+    background-color: #0d452c;
 }</string>
    </property>
   </widget>
@@ -620,6 +680,70 @@
    </property>
    <property name="text">
     <string>Track #</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="log_output">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>110</y>
+     <width>901</width>
+     <height>461</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Eras Demi ITC</family>
+     <pointsize>12</pointsize>
+     <underline>false</underline>
+     <strikeout>false</strikeout>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QTextEdit{
+    background-color: #b2e6d4;
+	border-radius: 50px;
+	color: black;
+	padding: 20px;
+}</string>
+   </property>
+   <property name="textInteractionFlags">
+    <set>Qt::TextEditorInteraction</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="close_log">
+   <property name="geometry">
+    <rect>
+     <x>840</x>
+     <y>130</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>20</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+     <underline>false</underline>
+     <strikeout>false</strikeout>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+    background-color: #a49e8d;
+    border-width: 0px;
+    border-radius: 20px;
+    padding: 0px;
+}
+
+QPushButton::hover {
+    background-color: #ddf9ec;
+}</string>
+   </property>
+   <property name="text">
+    <string>X</string>
    </property>
   </widget>
  </widget>

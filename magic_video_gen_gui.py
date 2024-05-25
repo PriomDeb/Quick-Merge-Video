@@ -1,10 +1,24 @@
 import sys
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog
 from PyQt5.uic import loadUi
 import os
 from concurrent.futures import ThreadPoolExecutor
 from magic_video_gen import magic_video_render
+
+APP_NAME = "Magic Video Gen"
+VERSION = "1.0"
+DEVELOPER = "Priom Deb"
+WINDOW_NAME = f"{APP_NAME} v{VERSION} by {DEVELOPER}"
+
+class EmittingStream(QtCore.QObject):
+    textWritten = QtCore.pyqtSignal(str)
+
+    def write(self, text):
+        self.textWritten.emit(str(text))
+
+    def flush(self):
+        pass
 
 class MainWindow(QDialog):
     def __init__(self):
@@ -19,12 +33,29 @@ class MainWindow(QDialog):
         self.track_number.setMaximum(1000)
         # self.warning.setVisible(False)
         # self.button.setVisible(False)
+        self.log_output.setVisible(False)
+        self.close_log.setVisible(False)
+        self.close_log.clicked.connect(self.close_log_window)
         
         self.__audio_files = None
         self.__image_files = None
         self.__render_directory = None
         
         self.executor = ThreadPoolExecutor(max_workers=1)
+        
+        self.log_output.setReadOnly(True)
+        sys.stdout = EmittingStream(textWritten=self.normal_output_written)
+    
+    def normal_output_written(self, text):
+        cursor = self.log_output.textCursor()
+        cursor.movePosition(QtGui.QTextCursor.End)
+        cursor.insertText(text)
+        self.log_output.setTextCursor(cursor)
+        self.log_output.ensureCursorVisible()
+    
+    def close_log_window(self):
+        self.close_log.setVisible(False)
+        self.log_output.setVisible(False)
     
     def button_clicked(self):
         album = self.album.text()
@@ -102,8 +133,11 @@ class MainWindow(QDialog):
                            track_number_start=track_number,
                            credit_text=credit
                            )
+        print(f"{len(self.__audio_files)} Videos Rendered Successfully. \nThank you for using Magic Video Gen by Priom Deb.")
     
     def render_videos(self):
+        self.log_output.setVisible(True)
+        self.close_log.setVisible(True)
         self.executor.submit(self.run_script)
     
     def closeEvent(self):
@@ -116,8 +150,11 @@ widget = QtWidgets.QStackedWidget()
 widget.addWidget(mainwindow)
 widget.setFixedWidth(920)
 widget.setFixedHeight(800)
+widget.setWindowTitle(WINDOW_NAME)
 # widget.resize(920, 800)
 widget.show()
 sys.exit(app.exec_())
 
 # https://coolors.co/a49e8d-504136-689689-b2e6d4-83e8ba
+# pyinstaller --onefile --icon=batteryfyAppIcon.ico -w magic_video_gen_gui.py
+# pyinstaller --onefile -w magic_video_gen_gui.py

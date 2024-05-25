@@ -26,6 +26,11 @@ parser.add_argument('--image_list', type=str, help='List of images for making vi
 
 args = parser.parse_args()
 
+class CustomProgressBar(ProgressBarLogger):
+    def bars_callback(self, bar, attr, value, old_value=None):
+        percentage = (value / self.bars[bar]['total']) * 100
+        print(f"\rSaving video {track_name}: {percentage:.2f}%", end="\r")
+
 
 def rename_image_files(directory, rename=None):
     files = [f for f in os.listdir(directory) if f.lower().endswith('.jpg')]
@@ -65,6 +70,7 @@ def magic_music_video_gen(image_path,
     audio = AudioFileClip(audio_path)
     audio = moviepy.audio.fx.all.audio_fadein(audio, fadein)
     audio = moviepy.audio.fx.all.audio_fadeout(audio, fadeout)
+    global track_name
     
     images = [image.set_duration(audio.duration).fx(vfx.fadein, fadein).fx(vfx.fadeout, fadeout)]
     
@@ -119,7 +125,9 @@ def magic_music_video_gen(image_path,
     print(render_directory)
     print(f"{video_filename}.mp4")
     print("--------------------")
-    final_video.write_videofile(f"{video_filename}.mp4", fps=30)
+    logger = CustomProgressBar()
+    track_name = f"{video_filename}.mp4"
+    final_video.write_videofile(f"{video_filename}.mp4", fps=30, logger=logger)
     end = time.time()
     print(f"\nTotal time taken to render the video: {(end - start):.2f}s.")
 
