@@ -87,7 +87,9 @@ app = QApplication(sys.argv)
 mainwindow = MainWindow()
 widget = QtWidgets.QStackedWidget()
 widget.addWidget(mainwindow)
-widget.setFixedWidth(900)
+widget.setFixedWidth(920)
 widget.setFixedHeight(700)
 widget.show()
 sys.exit(app.exec_())
+
+# https://coolors.co/a49e8d-504136-689689-b2e6d4-83e8ba

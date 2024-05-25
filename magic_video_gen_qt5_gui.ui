@@ -2,12 +2,15 @@
 <ui version="4.0">
  <class>Dialog</class>
  <widget class="QDialog" name="Dialog">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
-    <height>700</height>
+    <width>924</width>
+    <height>709</height>
    </rect>
   </property>
   <property name="font">
@@ -20,14 +23,30 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog#Dialog {
+    background-color: #062216;
+    min-width: 10em;
+    padding: 6px;
+}</string>
+  </property>
   <widget class="QPushButton" name="audio_browse">
    <property name="geometry">
     <rect>
      <x>720</x>
      <y>70</y>
-     <width>171</width>
+     <width>191</width>
      <height>161</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton#audio_browse {
+    background-color: #53df80;
+    border-width: 0px;
+    border-radius: 10px;
+    font: 20px;
+    padding: 0px;
+}</string>
    </property>
    <property name="text">
     <string>Browse</string>
@@ -52,6 +71,12 @@
      <strikeout>false</strikeout>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel#browse_audio_label {
+    background-color: None;
+	color: #83e8ba;
+}</string>
+   </property>
    <property name="text">
     <string>Browse Audio Files</string>
    </property>
@@ -75,6 +100,12 @@
      <strikeout>false</strikeout>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel#browse_image_label {
+    background-color: None;
+	color: #83e8ba;
+}</string>
+   </property>
    <property name="text">
     <string>Browse Image Files</string>
    </property>
@@ -84,15 +115,27 @@
     <rect>
      <x>720</x>
      <y>290</y>
-     <width>171</width>
+     <width>191</width>
      <height>161</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton#image_browse {
+    background-color: #53df80;
+    border-width: 0px;
+    border-radius: 10px;
+    font: 20px;
+    padding: 0px;
+}</string>
    </property>
    <property name="text">
     <string>Browse</string>
    </property>
   </widget>
   <widget class="QTextEdit" name="audio_dir">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -108,6 +151,13 @@
      <underline>false</underline>
      <strikeout>false</strikeout>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QTextEdit#audio_dir {
+    background-color: #093421;
+	border-radius: 10px;
+	color: #a9efd0;
+}</string>
    </property>
   </widget>
   <widget class="QTextEdit" name="image_dir">
@@ -127,14 +177,21 @@
      <strikeout>false</strikeout>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QTextEdit#image_dir {
+    background-color: #093421;
+	border-radius: 10px;
+	color: #a9efd0;
+}</string>
+   </property>
   </widget>
   <widget class="QTextEdit" name="render_dir">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>580</y>
-     <width>701</width>
-     <height>61</height>
+     <x>540</x>
+     <y>510</y>
+     <width>371</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="font">
@@ -145,26 +202,42 @@
      <strikeout>false</strikeout>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QTextEdit#render_dir {
+    background-color: #093421;
+	border-radius: 10px;
+	color: #a9efd0;
+}</string>
+   </property>
   </widget>
   <widget class="QPushButton" name="render_browse">
    <property name="geometry">
     <rect>
-     <x>720</x>
-     <y>580</y>
-     <width>171</width>
-     <height>61</height>
+     <x>540</x>
+     <y>570</y>
+     <width>371</width>
+     <height>51</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton#render_browse {
+    background-color: #53df80;
+    border-width: 0px;
+    border-radius: 10px;
+    font: 20px;
+    padding: 0px;
+}</string>
    </property>
    <property name="text">
     <string>Browse</string>
    </property>
   </widget>
-  <widget class="QLabel" name="browse_image_label_2">
+  <widget class="QLabel" name="browse_render_label">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>530</y>
-     <width>291</width>
+     <x>540</x>
+     <y>460</y>
+     <width>371</width>
      <height>51</height>
     </rect>
    </property>
@@ -178,18 +251,36 @@
      <strikeout>false</strikeout>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel#browse_render_label {
+    background-color: None;
+	color: #83e8ba;
+}</string>
+   </property>
    <property name="text">
     <string>Render Directory</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QPushButton" name="render">
    <property name="geometry">
     <rect>
-     <x>720</x>
-     <y>640</y>
-     <width>171</width>
+     <x>730</x>
+     <y>630</y>
+     <width>181</width>
      <height>61</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton#render {
+    background-color: #53af80;
+    border-width: 0px;
+    border-radius: 10px;
+    font: 20px;
+    padding: 0px;
+}</string>
    </property>
    <property name="text">
     <string>Render</string>
@@ -199,10 +290,19 @@
    <property name="geometry">
     <rect>
      <x>540</x>
-     <y>640</y>
-     <width>171</width>
+     <y>630</y>
+     <width>181</width>
      <height>61</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton#cancel_render{
+    background-color: #a9efd0;
+    border-width: 0px;
+    border-radius: 10px;
+    font: 20px;
+    padding: 0px;
+}</string>
    </property>
    <property name="text">
     <string>Cancel Render</string>
