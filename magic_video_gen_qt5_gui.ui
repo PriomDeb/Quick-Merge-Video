@@ -57,7 +57,7 @@
     <rect>
      <x>10</x>
      <y>20</y>
-     <width>291</width>
+     <width>701</width>
      <height>51</height>
     </rect>
    </property>
@@ -86,7 +86,7 @@
     <rect>
      <x>10</x>
      <y>240</y>
-     <width>291</width>
+     <width>701</width>
      <height>51</height>
     </rect>
    </property>
@@ -159,6 +159,9 @@
 	color: #a9efd0;
 }</string>
    </property>
+   <property name="textInteractionFlags">
+    <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+   </property>
   </widget>
   <widget class="QTextEdit" name="image_dir">
    <property name="geometry">
@@ -184,6 +187,12 @@
 	color: #a9efd0;
 }</string>
    </property>
+   <property name="acceptRichText">
+    <bool>true</bool>
+   </property>
+   <property name="textInteractionFlags">
+    <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+   </property>
   </widget>
   <widget class="QTextEdit" name="render_dir">
    <property name="geometry">
@@ -208,6 +217,9 @@
 	border-radius: 10px;
 	color: #a9efd0;
 }</string>
+   </property>
+   <property name="textInteractionFlags">
+    <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
    </property>
   </widget>
   <widget class="QPushButton" name="render_browse">
